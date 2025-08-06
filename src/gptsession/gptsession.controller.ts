@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { GPTSessionService } from './gptsession.service';
 import { CreateGPTSessionDto } from './dto/create-gptsession.dto';
 
@@ -17,7 +17,7 @@ export class GPTSessionController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gptService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.gptService.findOne(id);
   }
 }
