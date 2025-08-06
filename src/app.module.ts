@@ -29,6 +29,7 @@ import { DocumentModule } from './document/document.module';
 import { Address } from './address/address.entity';
 import { ServiceProvider } from './service-provider/serviceprovider.entity';
 import { GeoLocation } from './geolocation/geo-location.entity';
+import { Document } from './document/document.entity';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { GeoLocation } from './geolocation/geo-location.entity';
       username: 'postgres',
       password: '12345678',
       database: 'test-nestjs',
-      entities: [Enrollment, Customer, FamilyGroupUser, GPTSession, AstroProfile, HealthRecordInfo, FamilyGroup, HealthRecord, Address, ServiceProvider, GeoLocation], 
+      entities: [Enrollment, Customer, FamilyGroupUser, GPTSession, AstroProfile, HealthRecordInfo, FamilyGroup, HealthRecord, Address, ServiceProvider, GeoLocation, Document], 
       synchronize: true, 
       autoLoadEntities: true,
      }),
