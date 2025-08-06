@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Address } from 'src/address/address.entity';
 
 @Entity()
 export class GeoLocation {
@@ -10,4 +11,7 @@ export class GeoLocation {
 
   @Column('decimal', { precision: 10, scale: 7 })
   longitude: number;
+
+  @OneToOne(() => Address, address => address.geoLocation)
+  address: Address;
 }

@@ -8,4 +8,5 @@ export class CreateGeoLocationDto {
   @IsNotEmpty()
   @IsNumber()
   longitude: number;
+  
 }

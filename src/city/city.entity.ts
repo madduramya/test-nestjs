@@ -1,20 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { State } from '../state/state.entity';
-import { Pincode } from '../pincode/pincode.entity';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { State } from "../state/state.entity";
+import { Pincode } from "../pincode/pincode.entity";
 
 @Entity()
+@Unique(['name', 'state'])
 export class City {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
-  @ManyToOne(() => State, (state) => state.cities)
-  @JoinColumn()
+  @ManyToOne(() => State, state => state.cities)
   state: State;
 
-  @ManyToOne(() => Pincode, (pincode) => pincode.cities)
-  @JoinColumn()
-  pincode: Pincode;
+  @ManyToMany(() => Pincode, pincode => pincode.cities, { cascade: true })
+  @JoinTable()
+  pincodes: Pincode[];
+  
 }
+

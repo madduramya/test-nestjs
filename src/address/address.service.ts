@@ -22,10 +22,7 @@ export class AddressService {
 
   async create(dto: CreateAddressDto): Promise<Address> {
     const address = new Address();
-    address.line1 = dto.line1;
-    address.line2 = dto.line2;
-    address.landmark = dto.landmark;
-
+    address.street = dto.street,
     address.country = await this.countryRepo.findOneByOrFail({ id: dto.countryId });
     address.state = await this.stateRepo.findOneByOrFail({ id: dto.stateId });
     address.city = await this.cityRepo.findOneByOrFail({ id: dto.cityId });

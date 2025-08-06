@@ -1,18 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { City } from '../city/city.entity';
-import { Address } from 'src/address/address.entity';
+import { Entity, Unique, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
+import { City } from "../city/city.entity";
 
 @Entity()
+@Unique(['code'])
 export class Pincode {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true})
+  @Column()
   code: string;
 
-  @OneToMany(() => City, (city) => city.pincode) 
-  cities: City[];
-
-  @OneToMany(() => Address, address => address.pincode)
-  addresses: Address[];
+  @ManyToMany(() => City, city => city.pincodes)
+  cities: City;
 }

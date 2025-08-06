@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { State } from '../state/state.entity';
+import { Entity, Unique, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { State } from "../state/state.entity";
 
 @Entity()
+@Unique(['name'])
 export class Country {
   @PrimaryGeneratedColumn()
   id: number;
