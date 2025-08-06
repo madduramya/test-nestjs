@@ -1,17 +1,26 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Customer } from "../customer/customer.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
+import { Customer } from '../customer/customer.entity';
 
 @Entity()
 export class GPTSession {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    query: string;
+  @Column()
+  prompt: string; // user question
 
-    @Column()
-    response: string;
+  @Column('text')
+  response: string; // GPT model response
 
-    @ManyToOne(() => Customer, customer => customer.gptSessions)
-    customer: Customer;
+  @ManyToOne(() => Customer, (customer) => customer.gptSessions, { onDelete: 'CASCADE' })
+  customer: Customer;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

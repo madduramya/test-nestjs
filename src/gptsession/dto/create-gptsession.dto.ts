@@ -2,7 +2,7 @@ import { IsString, IsInt } from 'class-validator';
 
 export class CreateGPTSessionDto {
   @IsString()
-  query: string;
+  prompt: string;
 
   @IsString()
   response: string;

@@ -14,7 +14,7 @@ export class GPTSessionService {
 
   async create(dto: CreateGPTSessionDto): Promise<GPTSession> {
     const session = this.gptRepo.create({
-      query: dto.query,
+      prompt: dto.prompt,
       response: dto.response,
       customer: { id: dto.customerId } as Customer,
     });
