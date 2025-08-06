@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { AstroProfileService } from './astroprofile.service';
 import { CreateAstroProfileDto } from './dto/create-astroprofile.dto';
 
@@ -17,7 +17,7 @@ export class AstroProfileController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.astroProfileService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.astroProfileService.findOne(id);
   }
 }
