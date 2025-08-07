@@ -23,12 +23,17 @@ export class CountryService {
     return await this.countryRepo.save(country);
   }
 
-  // Get all countries
   async findAll(): Promise<Country[]> {
     return this.countryRepo.find();
   }
 
-  // Get single country
+  async search(query: string): Promise<Country[]> {
+    return await this.countryRepo
+      .createQueryBuilder('country')
+      .where('LOWER(country.name) LIKE LOWER(:query)', { query: `%${query}%`})
+      .getMany();
+  }
+
   async findOne(id: number): Promise<Country> {
     const country = await this.countryRepo.findOne({ where: { id } });
     if (!country) throw new NotFoundException(`Country with ID ${id} not found`);

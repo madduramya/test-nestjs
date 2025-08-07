@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateCustomerDto } from '../customer/dto/create-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from './customer.entity';
-import { Repository } from 'typeorm';
+import { QueryBuilder, Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { BadRequestException } from '@nestjs/common';
-
+import { InternalServerErrorException } from '@nestjs/common';
 @Injectable()
 export class CustomerService {
     constructor(
@@ -42,6 +42,15 @@ export class CustomerService {
     }
 
     return customer;
+  }
+
+  async search(query: string): Promise<Customer[]> {
+  return await this.customerRepository
+    .createQueryBuilder('customer')
+    .where('LOWER(customer.firstName) LIKE LOWER(:query)', { query: `%${query}%` })
+    .orWhere('LOWER(customer.lastName) LIKE LOWER(:query)', { query: `%${query}%` })
+    .orWhere('LOWER(customer.email) LIKE LOWER(:query)', { query: `%${query}%` })
+    .getMany();
   }
 
   async findAll(): Promise<Customer[]> {

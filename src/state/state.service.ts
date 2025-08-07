@@ -37,6 +37,14 @@ export class StateService {
     return this.stateRepo.save(state);
   }
 
+  async search(query: string): Promise<State[]> {
+  return await this.stateRepo
+    .createQueryBuilder('state')
+    .leftJoinAndSelect('state.country', 'country')
+    .where('LOWER(state.name) LIKE LOWER(:query)', { query: `%${query}%` })
+    .getMany();
+  }
+
   // Get all states
   async findAll(): Promise<State[]> {
     return this.stateRepo.find({ relations: ['country'] });

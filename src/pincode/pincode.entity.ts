@@ -1,8 +1,8 @@
-import { Entity, Unique, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
+import { Entity, Unique, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { City } from "../city/city.entity";
 
 @Entity()
-@Unique(['code'])
+@Unique(['code', 'city'])
 export class Pincode {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,6 +10,8 @@ export class Pincode {
   @Column()
   code: string;
 
-  @ManyToMany(() => City, city => city.pincodes)
-  cities: City;
+  @ManyToOne(() => City, city => city.pincodes)
+  @JoinColumn({ name: 'cityId' })
+  city: City;
+
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, ParseIntPipe, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, ParseIntPipe, Param, Query } from '@nestjs/common';
 import { CityService } from './city.service';
 import { CreateCityDto } from './dto/create-city.dto';
 
@@ -15,6 +15,12 @@ export class CityController {
     findAll() {
         return this.cityService.findAll();
     }
+
+    @Get('search')
+    search(@Query('q') query: string) {
+        return this.cityService.search(query);
+    }
+
 
     @Get()
     findOne(@Param('id', ParseIntPipe)id: number) {

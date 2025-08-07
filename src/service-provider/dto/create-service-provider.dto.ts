@@ -38,7 +38,7 @@ export class CreateServiceProviderDto {
 
   @IsOptional()
   @IsNumber()
-  addressId?: number;
+  addressId: number;
 
   @IsNumber()
   @IsOptional()

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -13,6 +13,11 @@ export class CustomerController {
     return this.customerService.create(dto);
   }
 
+  @Get('search')
+  search(@Query('q') query: string) {
+    return this.customerService.search(query);
+  }
+ 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.customerService.findOne(id);

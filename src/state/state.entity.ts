@@ -4,7 +4,8 @@ import {
   PrimaryGeneratedColumn, 
   Column, 
   ManyToOne, 
-  OneToMany 
+  OneToMany ,
+  JoinColumn
 } from "typeorm";
 import { Country } from "../country/country.entity";
 import { City } from "../city/city.entity";
@@ -18,7 +19,8 @@ export class State {
   @Column()
   name: string;
 
-  @ManyToOne(() => Country, country => country.states)
+  @ManyToOne(() => Country, country => country.states, { eager: true })
+  @JoinColumn({ name: 'countryId' })
   country: Country;
 
   @OneToMany(() => City, city => city.state)

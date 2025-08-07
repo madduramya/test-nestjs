@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { StateService } from './state.service';
 import { CreateStateDto } from './dto/create-state.dto';
 
@@ -16,6 +16,12 @@ export class StateController {
     findAll() {
         return this.stateService.findAll();
     }
+
+    @Get('search')
+    search(@Query('q') query: string) {
+        return this.stateService.search(query);
+    }
+
 
     @Get() 
     findOne(@Param('id', ParseIntPipe)id: number) {

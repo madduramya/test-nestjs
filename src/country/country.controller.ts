@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, Patch, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Patch, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { CountryService } from './country.service';
 import { CreateCountryDto } from './dto/create-country.dto';
 //import { UpdateCountryDto } from './dto/update-country.dto';
@@ -15,6 +15,11 @@ export class CountryController {
   @Get()
   findAll() {
     return this.countryService.findAll();
+  }
+
+  @Get('search')
+  search(@Query('q') query: string) {
+    return this.countryService.search(query);
   }
 
   @Get(':id')

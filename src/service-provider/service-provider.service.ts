@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { ServiceProvider } from '../service-provider/serviceprovider.entity';
 import { CreateServiceProviderDto } from './dto/create-service-provider.dto';
 import { Address } from '../address/address.entity';
+import { UpdateServiceProviderDto } from './dto/update-service-provider.dto';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class ServiceProviderService {
@@ -18,11 +20,11 @@ export class ServiceProviderService {
   async create(dto: CreateServiceProviderDto): Promise<ServiceProvider> {
     const serviceProvider = this.serviceProviderRepo.create(dto);
 
-    // if (dto.addressId) {
-    //   const address = await this.addressRepo.findOne({ where: { id: dto.addressId } });
-    //   if (!address) throw new NotFoundException('Address not found');
-    //   serviceProvider.address = address;
-    // }
+    if (dto.addressId) {
+      const address = await this.addressRepo.findOne({ where: { id: dto.addressId } });
+      if (!address) throw new NotFoundException('Address not found');
+      serviceProvider.address = address;
+    }
 
     return this.serviceProviderRepo.save(serviceProvider);
   }
@@ -37,18 +39,36 @@ export class ServiceProviderService {
     return provider;
   }
 
-  // async update(id: number, dto: UpdateServiceProviderDto): Promise<ServiceProvider> {
-  //   const provider = await this.findOne(id);
+  async search(query: string): Promise<ServiceProvider[]> {
+    return await this.serviceProviderRepo
+      .createQueryBuilder('provider')
+      .where('LOWER(provider.name) LIKE LOWER(:query)', { query: `%${query}%` })
+      .orWhere('LOWER(provider.email) LIKE LOWER(:query)', { query: `%${query}%` })
+      .orWhere('LOWER(provider.serviceType) LIKE LOWER(:query)', { query: `%${query}%` })
+      .orWhere('provider.phone LIKE :query', { query: `%${query}%` })
+      .getMany();
+  }
 
-  //   if (dto.addressId) {
-  //     const address = await this.addressRepo.findOne({ where: { id: dto.addressId } });
-  //     if (!address) throw new NotFoundException('Address not found');
-  //     provider.address = address;
-  //   }
+  async update(id: number, dto: UpdateServiceProviderDto): Promise<ServiceProvider> {
+  const existing = await this.serviceProviderRepo.findOne({ where: { id } });
 
-  //   Object.assign(provider, dto);
-  //   return this.serviceProviderRepo.save(provider);
-  // }
+  if (!existing) {
+    throw new NotFoundException(`ServiceProvider with id ${id} not found`);
+  }
+
+  // Only check for email conflict if email is being changed
+  if (dto.email && dto.email !== existing.email) {
+    const emailTaken = await this.serviceProviderRepo.findOne({ where: { email: dto.email } });
+    if (emailTaken) {
+      throw new ConflictException(`Email ${dto.email} already exists`);
+    }
+  }
+
+  Object.assign(existing, dto);
+  return await this.serviceProviderRepo.save(existing);
+}
+
+
 
   // async remove(id: number): Promise<void> {
   //   const result = await this.serviceProviderRepo.delete(id);
